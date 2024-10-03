@@ -32,7 +32,7 @@ Start by cloning this repository to your local machine:
 
 ```bash
 git clone https://github.com/juaniten/fronius-datamanager-monitor.git
-cd fronius-pv-data-logger
+cd fronius-datamanager-monitor
 ```
 
 ## Configuration
@@ -50,7 +50,7 @@ You need to create a `.env` file from the provided `.env.example` template to co
 2. Edit the `.env` file and configure the following:
    - `DOCKER_INFLUXDB_INIT_ORG`: Name of your organization for InfluxDB.
    - `DOCKER_INFLUXDB_INIT_BUCKET`: The bucket where the data will be stored.
-   - `TELEGRAF_MEASUREMENT_NAME_OVERRIDE`: Measurement name for Fronius push data.
+   - `TELEGRAF_MEASUREMENT_NAME_OVERRIDE`: Name for overriding the base name of the measurement in the DB.
    - `TELEGRAF_ENDPOINT_PATH_NAME`: Endpoint path that Telegraf will expose. This should match the Fronius push service path (e.g., `fronius`).
    - `INFLUX_TOKEN`: Leave this empty for now; you will obtain the token during the InfluxDB setup.
 
@@ -83,12 +83,14 @@ docker-compose restart telegraf
 To allow your Fronius inverter to send push data to your Telegraf endpoint, follow these steps:
 
 1. Log in to your Fronius inverter's web interface.
-2. Navigate to **Settings > Datamanager > Push Services**.
+2. Navigate to **Settings > Push Services**.
 3. Add a new HTTP push service with the following details:
 
-   - **URL**: `http://<your-server-ip>:8094/<TELEGRAF_ENDPOINT_PATH_NAME>` (replace `<your-server-ip>` with your server's IP address and `<TELEGRAF_ENDPOINT_PATH_NAME>` with the value set in your `.env` file, e.g., `fronius`).
-   - **Data Format**: JSON
-   - **Interval**: Set your desired data transmission interval.
+   - **Data format**: "SolarAPI v1 - CurrentData - PowerFlow" by "HHTP POST".
+   - **Interval**: Set your desired data transmission interval abd check "activated".
+
+   - **Server:Port:**: `http://<your-server-ip>:8094` (replace `<your-server-ip>` with your server's IP address)
+   - **Upload file name**: `/<TELEGRAF_ENDPOINT_PATH_NAME>` (replace `<TELEGRAF_ENDPOINT_PATH_NAME>` with the value set in your `.env` file, e.g., `fronius`).
 
 4. Save and activate the push service.
 
@@ -126,8 +128,10 @@ If you want to expose your Telegraf endpoint to the internet (e.g., if your Fron
 - **Port forwarding**: Forward port `8094` (Telegraf HTTP endpoint) from your router to the machine running Docker.
 - **Firewall rules**: Ensure that the ports (e.g., `8094` for Telegraf) are open for external access.
 
-**Note:** Exposing services to the internet can present security risks. Consider using HTTPS and securing your Telegraf endpoint with basic authentication or TLS for secure data transmission.
+### Security
+
+**Note:** This is just a simple proof of concept for toying around, not suitable for production. Consider using HTTPS and securing your Telegraf endpoint with basic authentication or TLS for secure data transmission.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
