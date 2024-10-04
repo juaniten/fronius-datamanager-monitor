@@ -1,9 +1,11 @@
 # Fronius Datamanager Logger and Monitor
 
-This repository contains a Docker Compose stack designed to capture real-time photovoltaic (PV) production data from a Fronius inverter with Datamanager. The stack consists of two services:
+This repository contains a Docker Compose stack designed to capture real-time photovoltaic (PV) production data from a Fronius inverter capable of using SolarAPI v.1. The stack consists of two services:
 
 - **Telegraf**: An agent that listens for push calls from the inverter through an exposed HTTP endpoint.
 - **InfluxDB**: A database that stores the PV production data for analysis and monitoring.
+
+Additionally, the Fronius inverter uses the **SolarAPI v1 - CurrentData - PowerFlow** to push energy flow data to Telegraf. This service sends JSON-formatted data which includes real-time information about power production, consumption, grid import/export, and more.
 
 ## Table of Contents
 
@@ -14,6 +16,7 @@ This repository contains a Docker Compose stack designed to capture real-time ph
    - [InfluxDB Setup](#influxdb-setup)
    - [Restart Telegraf Service](#restart-telegraf-service)
    - [Fronius Inverter Configuration](#fronius-inverter-configuration)
+   - [Understanding Fronius Push Service Data](#understanding-fronius-push-service-data)
 4. [Running the Stack](#running-the-stack)
 5. [Port Configuration](#port-configuration)
 
@@ -86,13 +89,36 @@ To allow your Fronius inverter to send push data to your Telegraf endpoint, foll
 2. Navigate to **Settings > Push Services**.
 3. Add a new HTTP push service with the following details:
 
-   - **Data format**: "SolarAPI v1 - CurrentData - PowerFlow" by "HHTP POST".
-   - **Interval**: Set your desired data transmission interval abd check "activated".
-
-   - **Server:Port:**: `http://<your-server-ip>:8094` (replace `<your-server-ip>` with your server's IP address)
+   - **Data format**: Select **"SolarAPI v1 - CurrentData - PowerFlow"**.
+   - **Interval**: Set your desired data transmission interval and ensure "activated" is checked.
+   - **Server:Port**: `http://<your-server-ip>:8094` (replace `<your-server-ip>` with your server's IP address).
    - **Upload file name**: `/<TELEGRAF_ENDPOINT_PATH_NAME>` (replace `<TELEGRAF_ENDPOINT_PATH_NAME>` with the value set in your `.env` file, e.g., `fronius`).
 
 4. Save and activate the push service.
+
+### Understanding Fronius Push Service Data
+
+The **SolarAPI v1 - CurrentData - PowerFlow** push service provides JSON data with real-time information about your PV system's power flow. This data includes:
+
+- **P_PV**: Power produced by the PV system.
+- **P_Grid**: Power imported from or exported to the grid.
+- **P_Load**: Power consumed by your household.
+- **P_Akku**: Power from a connected battery (if available).
+- **rel_Autonomy**: The percentage of power self-sufficiency.
+- **rel_SelfConsumption**: The percentage of solar power consumed directly on-site.
+
+This JSON data is pushed to Telegraf, which parses it and sends it to InfluxDB for storage. The data can then be visualized and monitored in tools like Grafana.
+
+#### Modifying the Data Push
+
+You can modify the JSON data structure or frequency in the Fronius web interface:
+
+1. **Data Transmission Interval**: Adjust how frequently data is sent by setting a shorter or longer interval in the **Push Services** configuration.
+2. **Data Format**: If you want to monitor additional metrics (e.g., energy per day or total energy production), you can add more push services that use different **SolarAPI endpoints** (such as `SolarAPI v1 - CurrentData - Inverter`).
+
+If you add more services, you will need to adjust the Telegraf configuration to handle the new endpoints and data structures.
+
+---
 
 ## Running the Stack
 
@@ -131,6 +157,8 @@ If you want to expose your Telegraf endpoint to the internet (e.g., if your Fron
 ### Security
 
 **Note:** This is just a simple proof of concept for toying around, not suitable for production. Consider using HTTPS and securing your Telegraf endpoint with basic authentication or TLS for secure data transmission.
+
+---
 
 ## License
 
