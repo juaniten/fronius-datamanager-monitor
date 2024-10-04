@@ -62,7 +62,7 @@ You need to create a `.env` file from the provided `.env.example` template to co
 1. Run the stack with the following command:
 
    ```bash
-   docker-compose up -d
+   docker compose up -d
    ```
 
 2. Once the InfluxDB service is running, navigate to `http://localhost:8086` in your browser.
@@ -78,7 +78,7 @@ You need to create a `.env` file from the provided `.env.example` template to co
 After updating the `.env` file with the InfluxDB token, you need to restart the `telegraf` service to apply the changes:
 
 ```bash
-docker-compose restart telegraf
+docker compose restart telegraf
 ```
 
 ### Fronius Inverter Configuration
@@ -125,7 +125,7 @@ If you add more services, you will need to adjust the Telegraf configuration to 
 To start the services, simply run the following command:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 This will start both the InfluxDB and Telegraf services. Telegraf will now listen on the configured HTTP endpoint for push calls from the Fronius inverter.
@@ -133,7 +133,7 @@ This will start both the InfluxDB and Telegraf services. Telegraf will now liste
 To stop the stack:
 
 ```bash
-docker-compose down
+docker compose down
 ```
 
 ## Port Configuration
