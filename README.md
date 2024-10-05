@@ -1,7 +1,3 @@
-Here’s the updated `README.md` file based on your requirements:
-
----
-
 # Fronius Datamanager Logger and Monitor
 
 This repository contains a Docker Compose stack designed to capture real-time photovoltaic (PV) production data from a Fronius inverter capable of using SolarAPI v.1. The stack consists of two services:
