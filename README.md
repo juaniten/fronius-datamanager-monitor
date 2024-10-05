@@ -91,6 +91,8 @@ To allow your Fronius inverter to send push data to your Telegraf endpoint, foll
 
 4. Save and activate the push service.
 
+![InfluxDB Dashboard Example](./images/fronius-push-configuration-sample.png)
+
 ### Understanding Fronius Push Service Data
 
 The **SolarAPI v1 - CurrentData - PowerFlow** push service provides JSON data with real-time information about your PV system's power flow. This data includes:
@@ -103,6 +105,8 @@ The **SolarAPI v1 - CurrentData - PowerFlow** push service provides JSON data wi
 - **rel_SelfConsumption**: The percentage of solar power consumed directly on-site.
 
 This JSON data is pushed to Telegraf, which parses it and sends it to InfluxDB for storage.
+
+Of course, you can choose any other data format option and adapt the Telegraf service accordingly. You can find the operating instructions for the Push Service on the [Fronius website](https://www.fronius.com).
 
 ---
 
