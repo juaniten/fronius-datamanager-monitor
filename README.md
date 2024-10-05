@@ -126,7 +126,9 @@ Once the stack is running, and the Fronius inverter is pushing data, you can acc
    - Click **Create Dashboard** and add a cell with your desired queries to visualize data such as real-time power production, consumption, or grid export.
 
 4. **Monitor Data in Real-Time**:
-   - Dashboards allow you to visualize your inverter’s data in real-time, enabling you to track energy production, consumption, and grid interactions.
+   - Dashboards allow you to visualize your inverter’s data in real-time, enabling you to track energy production, consumption, grid interactions and much more.
+
+![InfluxDB Dashboard Example](./images/influxdb-dashboard-sample.png)
 
 ---
 
