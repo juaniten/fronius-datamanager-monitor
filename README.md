@@ -77,7 +77,7 @@ You need to create a `.env` file from the provided `.env.example` template to co
 To allow your Fronius inverter to send push data to your Telegraf endpoint, follow these steps:
 
 1. Log in to your Fronius inverter's web interface.
-2. Navigate to **Settings > Push Services**.
+2. Navigate to **Settings > Push Service**.
 3. Add a new HTTP push service with the following details:
 
    - **Data format**: Select **"SolarAPI v1 - CurrentData - PowerFlow"**.
